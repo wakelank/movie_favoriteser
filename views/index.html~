@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+  <head>
+  </head>
+  <body>
+    <h1>hello</h1>
+
+    <form id="movieSearch">
+      <input type="text" name="searchParam">
+      <input type="submit" id="movieSearchFormSubmit">
+    </form>
+  </body>
+  <script>
+document.getElementById('movieSearchFormSubmit').onclick = function(e){
+  e.preventDefault();
+  console.log('click');
+var searchValue = document.getElementById('movieSearch').searchParam.value;
+  console.log('searchValue');
+};
+
+</script>
+</html>
