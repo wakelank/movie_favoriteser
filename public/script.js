@@ -1,21 +1,26 @@
 window.onload = function(){
   document.getElementById('movieSearchFormSubmit').onclick = function(e){
     e.preventDefault();
-    var searchValue = document.getElementById('movieSearchForm').searchParam.value;
-    
 
+    var searchValue = document.getElementById('movieSearchForm').searchParam.value;
+    var baseUrl = "http://www.omdbapi.com/?s=";
+    var searchUrl = baseUrl + searchValue;
+    
     var request = new XMLHttpRequest();
     request.onreadystatechange = function() {
       if (request.readyState == 4 && request.status == 200) {
-        console.log(JSON.parse(request.response));
+        processResponse(request.response);
       }
     };
-    var url = "http://www.omdbapi.com/?s=%27frozen%27"
-      request.open('GET', url, true);
-    request.send();
-    
 
+    request.open('GET', searchUrl, true);
+    request.send();
   };
+
+  function processResponse(response){
+        console.log(JSON.parse(response));
+  }
+    
 
 
 }
