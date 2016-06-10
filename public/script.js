@@ -18,9 +18,18 @@ window.onload = function(){
   };
 
   function processResponse(response){
-        console.log(JSON.parse(response));
+    var jsonData = JSON.parse(response);
+    var movies = jsonData.Search;
+    var movieList = document.getElementsByClassName('movie-list')[0];
+    for(var i = 0; i < movies.length; ++i){
+      movieEl = document.createElement('li');
+      titleNode = document.createTextNode(movies[i].Title);
+      movieEl.appendChild(titleNode);
+      movieList.appendChild(movieEl);
+    }
+
   }
-    
+
 
 
 }
