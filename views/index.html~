@@ -5,18 +5,15 @@
   <body>
     <h1>hello</h1>
 
-    <form id="movieSearch">
-      <input type="text" name="searchParam">
+    <form id="movieSearchForm">
+      <input type="text" name="s">
       <input type="submit" id="movieSearchFormSubmit">
     </form>
+    <div class="searchResults">
+    </div>
   </body>
-  <script>
-document.getElementById('movieSearchFormSubmit').onclick = function(e){
-  e.preventDefault();
-  console.log('click');
-var searchValue = document.getElementById('movieSearch').searchParam.value;
-  console.log('searchValue');
-};
-
-</script>
+<!-- The script.js file is located in the public folder, but you don't -->
+<!-- need to put that in the src below. Sinatra looks in the public folder -->
+<!-- by default. -->
+  <script src='script.js' type='text/javascript'> </script>
 </html>
