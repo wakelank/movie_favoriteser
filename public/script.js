@@ -1,9 +1,11 @@
 window.onload = function(){
+  
+  var baseUrl = "https://www.omdbapi.com/?s=";
+
   document.getElementById('movieSearchFormSubmit').onclick = function(e){
     e.preventDefault();
 
     var searchValue = document.getElementById('movieSearchForm').searchParam.value;
-    var baseUrl = "https://www.omdbapi.com/?s=";
     var searchUrl = baseUrl + searchValue;
 
     // Builds the request object
@@ -22,6 +24,7 @@ window.onload = function(){
   };
 
   function processResponse(response){
+    debugger
     // The response needs to be put into JSON format so we can process it.
     var jsonData = JSON.parse(response);
     //Search here is not a JavaScript function. It's particular to the JSON
@@ -35,12 +38,12 @@ window.onload = function(){
     for(var i = 0; i < movies.length; ++i){
       movieEl = document.createElement('li');
       titleNode = document.createTextNode(movies[i].Title);
-      movieEl.appendChild(titleNode);
-      movieList.appendChild(movieEl);
+      linkEl = document.createElement('a');
+      linkEl.setAttribute(baseURL + movies[i].Title);
+
+      movieEl.appendChild(titleNode)
+      linkEl.appendChild(movieEl);
+      movieList.appendChild(linkEl);
     }
-
   }
-
-
-
 }
