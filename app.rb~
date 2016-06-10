@@ -1,7 +1,7 @@
 require 'sinatra'
 
 get '/' do  #Forgot the 'do'
-  File.read('views/index.html') #Need to include 'views'
+  File.read('index.html')
 end
 
 get 'favorites' do
