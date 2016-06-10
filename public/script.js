@@ -3,7 +3,7 @@ window.onload = function(){
     e.preventDefault();
 
     var searchValue = document.getElementById('movieSearchForm').searchParam.value;
-    var baseUrl = "http://www.omdbapi.com/?s=";
+    var baseUrl = "https://www.omdbapi.com/?s=";
     var searchUrl = baseUrl + searchValue;
     
     var request = new XMLHttpRequest();
