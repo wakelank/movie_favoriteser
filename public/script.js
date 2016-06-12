@@ -71,7 +71,14 @@ window.onload = function(){
     request.onreadystatechange = function() {
       if (request.readyState == 4 && request.status == 200) {
         var movieListEl = processMovieData(request.response);
+        var oldMovies = document.getElementsByClassName('movie-info');
+        for(var i = 0; i < oldMovies.length; ++ i){
+          oldMovies[i].parentNode.removeChild(oldMovies[i]);
+        };
         target.appendChild(movieListEl);
+
+
+
       }
     };
 
@@ -82,6 +89,7 @@ window.onload = function(){
   function processMovieData(data){
     var movie = JSON.parse(data);
     var listEl = document.createElement('ul');
+    listEl.className = 'movie-info';
    for (var item in movie) {
      var text = item + ": " + movie[item];
      var textNode = document.createTextNode(text);
