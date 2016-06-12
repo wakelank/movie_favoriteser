@@ -1,3 +1,4 @@
+
 window.onload = function(){
   
   var baseUrl = "https://www.omdbapi.com/?s=";
@@ -22,9 +23,9 @@ window.onload = function(){
     request.open('GET', searchUrl, true);
     request.send();
   };
+  
 
   function processResponse(response){
-    debugger
     // The response needs to be put into JSON format so we can process it.
     var jsonData = JSON.parse(response);
     //Search here is not a JavaScript function. It's particular to the JSON
@@ -39,7 +40,7 @@ window.onload = function(){
       movieEl = document.createElement('li');
       titleNode = document.createTextNode(movies[i].Title);
       linkEl = document.createElement('a');
-      linkEl.setAttribute(baseURL + movies[i].Title);
+      linkEl.setAttribute('href', baseUrl + movies[i].Title);
 
       movieEl.appendChild(titleNode)
       linkEl.appendChild(movieEl);
