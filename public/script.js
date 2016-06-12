@@ -71,10 +71,7 @@ window.onload = function(){
     request.onreadystatechange = function() {
       if (request.readyState == 4 && request.status == 200) {
         var movieListEl = processMovieData(request.response);
-        var oldMovies = document.getElementsByClassName('movie-info');
-        for(var i = 0; i < oldMovies.length; ++ i){
-          oldMovies[i].parentNode.removeChild(oldMovies[i]);
-        };
+        removeOldMovieData();
         target.appendChild(movieListEl);
 
 
@@ -101,4 +98,11 @@ window.onload = function(){
 
 
   };
+
+  function removeOldMovieData(){
+    var oldMovies = document.getElementsByClassName('movie-info');
+    for(var i = 0; i < oldMovies.length; ++ i){
+      oldMovies[i].parentNode.removeChild(oldMovies[i]);
+    };
+  }
 }
