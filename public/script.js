@@ -39,18 +39,19 @@ window.onload = function(){
     //to add to the page, and then appends it to the movie-list ul.
     //This is the proper order to do these things.
     for(var i = 0; i < movies.length; ++i){
-      var movieTitle = movies[i].Title
-      var movieUrl = baseUrl + "?t=" + movieTitle;
+      var movieTitle = movies[i].Title;
+      var movieImdbId = movies[i].imdbID;
       // First: build the individual elements
-      var listEl = document.createElement('li');
       var titleNode = document.createTextNode(movieTitle);
-      // Next: put the elements together
-      listEl.appendChild(titleNode);
+      var listEl = document.createElement('li');
+      listEl.setAttribute('data-imdbid', movieImdbId);
       listEl.onclick = function(e){
         e.preventDefault();
-        var movieTitle = e.currentTarget.innerText;
-        requestMovieData(movieTitle);
+        var targetImdbId = e.target.dataset.imdbid;
+        requestMovieData(targetImdbId);
       }
+      // Next: put the elements together
+      listEl.appendChild(titleNode);
         
 
       // Last: add them to the page. 
@@ -58,8 +59,8 @@ window.onload = function(){
     }
   }
 
-  function requestMovieData(movieTitle){
-    var movieUrl = baseUrl + "?t=" + movieTitle
+  function requestMovieData(imdbId){
+    var movieUrl = baseUrl + "?i=" + imdbId;
     var request = new XMLHttpRequest();
     request.onreadystatechange = function() {
       if (request.readyState == 4 && request.status == 200) {
