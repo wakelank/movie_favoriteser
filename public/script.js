@@ -1,13 +1,13 @@
 
 window.onload = function(){
   
-  var baseUrl = "https://www.omdbapi.com/?s=";
+  var baseUrl = "https://www.omdbapi.com/";
 
   document.getElementById('movieSearchFormSubmit').onclick = function(e){
     e.preventDefault();
 
     var searchValue = document.getElementById('movieSearchForm').searchParam.value;
-    var searchUrl = baseUrl + searchValue;
+    var searchUrl = baseUrl + "?s=" + searchValue;
 
     // Builds the request object
     var request = new XMLHttpRequest();
@@ -16,6 +16,7 @@ window.onload = function(){
         // JavaScript's asynchronicity in action. This line will not run until
         // the response from OMBD comes back.
         // Then it will pass the response to the processResponse function defined below.
+
         processResponse(request.response);
       }
     };
@@ -37,13 +38,19 @@ window.onload = function(){
     //Goes through the movies list, builds the html code that we need
     //to add to the page, and then appends it to the movie-list ul.
     for(var i = 0; i < movies.length; ++i){
-      movieEl = document.createElement('li');
-      titleNode = document.createTextNode(movies[i].Title);
-      linkEl = document.createElement('a');
-      linkEl.setAttribute('href', baseUrl + movies[i].Title);
+      var movieTitle = movies[i].Title
+      var movieUrl = baseUrl + "?t=" + movieTitle;
+      // First: build the individual elements
+      var listEl = document.createElement('li');
+      var titleNode = document.createTextNode(movieTitle);
+      // Some sweet method chaining
+      var linkEl = document.createElement('a');
+        linkEl.setAttribute('href', movieUrl);
+      // Next: put the elements together
+      listEl.appendChild(titleNode)
+      linkEl.appendChild(listEl);
 
-      movieEl.appendChild(titleNode)
-      linkEl.appendChild(movieEl);
+      // Last: add them to the page. 
       movieList.appendChild(linkEl);
     }
   }
