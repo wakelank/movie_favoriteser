@@ -40,22 +40,28 @@ window.onload = function(){
     //This is the proper order to do these things.
     for(var i = 0; i < movies.length; ++i){
       var movieTitle = movies[i].Title;
+      //imdbId is not arcane JavaScriptery. It's a unique identifier we can use
+      //to the the specific movie from OMDB.
       var movieImdbId = movies[i].imdbID;
       // First: build the individual elements
       var titleNode = document.createTextNode(movieTitle);
-      var listEl = document.createElement('li');
-      listEl.setAttribute('data-imdbid', movieImdbId);
-      listEl.onclick = function(e){
+      var listItemEl = document.createElement('li');
+      //Use 'data-something' to store data in an HTML element.
+      listItemEl.setAttribute('data-imdbid', movieImdbId);
+      listItemEl.onclick = function(e){
         e.preventDefault();
+        //JavaScript provides this cute way to get your data back out of the 
+        //HTML elemement. Anything attribute that starts with 'data-' 
+        //is available in the 'dataset'.
         var targetImdbId = e.target.dataset.imdbid;
         requestMovieData(targetImdbId);
       }
       // Next: put the elements together
-      listEl.appendChild(titleNode);
+      listItemEl.appendChild(titleNode);
         
 
       // Last: add them to the page. 
-      movieList.appendChild(listEl);
+      movieList.appendChild(listItemEl);
     }
   }
 
@@ -73,6 +79,17 @@ window.onload = function(){
   };
 
   function processMovieData(data){
-    console.log(data);
+    var movie = JSON.parse(data);
+    var listEl = document.createElement('ul');
+   for (var item in movie) {
+     var text = item + ": " + movie[item];
+     var textNode = document.createTextNode(text);
+     var listItemEl = document.createElement('li');
+     listItemEl.appendChild(textNode);
+     listEl.appendChild(listItemEl);
+   }
+   console.log(listEl);
+
+
   };
 }
