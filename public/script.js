@@ -54,7 +54,7 @@ window.onload = function(){
         //HTML elemement. Anything attribute that starts with 'data-' 
         //is available in the 'dataset'.
         var targetImdbId = e.target.dataset.imdbid;
-        requestMovieData(targetImdbId);
+        requestMovieData(e.target, targetImdbId);
       }
       // Next: put the elements together
       listItemEl.appendChild(titleNode);
@@ -65,12 +65,13 @@ window.onload = function(){
     }
   }
 
-  function requestMovieData(imdbId){
+  function requestMovieData(target, imdbId){
     var movieUrl = baseUrl + "?i=" + imdbId;
     var request = new XMLHttpRequest();
     request.onreadystatechange = function() {
       if (request.readyState == 4 && request.status == 200) {
-        processMovieData(request.response);
+        var movieListEl = processMovieData(request.response);
+        target.appendChild(movieListEl);
       }
     };
 
@@ -88,7 +89,7 @@ window.onload = function(){
      listItemEl.appendChild(textNode);
      listEl.appendChild(listItemEl);
    }
-   console.log(listEl);
+   return listEl;
 
 
   };
