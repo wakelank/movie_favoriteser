@@ -24,6 +24,21 @@ window.onload = function(){
     request.open('GET', searchUrl, true);
     request.send();
   };
+
+  function postFavoriteMovie(movieName, oid){
+    var request = new XMLHttpRequest();
+    request.onreadystatechange = function() {
+      if (request.readyState == 4 && request.statys == 200){
+        console.log('movie added');
+      }
+    }
+
+    var data = { name: "mymovie", oid: 101 };
+    request.open('GET', '/favorites?name=myMovie&oid=01010', true);
+    // request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    request.send();
+  }
+
   
 
   function processResponse(response){
@@ -103,7 +118,7 @@ window.onload = function(){
     var text = document.createTextNode('favorite');
     var movie = 'myMovie'
     favoriteButton.appendChild(text);
-    favoriteButton.onclick = addToFavorites(movie);
+    favoriteButton.onclick = postFavoriteMovie(movie);
     target.appendChild(favoriteButton);
   }
 
@@ -122,7 +137,4 @@ window.onload = function(){
     };
   }
 
-  function addToFavorites(movie){
-    console.log(movie);
-  }
 }
