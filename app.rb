@@ -1,4 +1,3 @@
-require 'pry'
 require 'json' #Need this to be able to use JSON below
 #getting gems from Gemfile instead of app.rb.
 require 'bundler'

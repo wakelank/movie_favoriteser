@@ -28,7 +28,7 @@ post '/favorites' do #Changed get to post to differentiate from the get
   unless params[:title] && params[:imdbid]
     return 'Invalid Request'
   end #Don't forget to close that unless loop
-  movie = { title: params[:Title], imdbid: params[:imdbID] }
+  movie = { Title: params[:title], imdbID: params[:imdbid] }
   file << movie
   File.write('data.json',JSON.pretty_generate(file))
   movie.to_json
