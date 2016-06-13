@@ -151,10 +151,16 @@ window.onload = function(){
     addCloseButton(titleBar);
     addFavoriteButton(titleBar, movieName, imdbid);
     var listEl = document.createElement('ul');
-    //This gets every attribute (item) of the movie object and displays the 
-    //attribute and it's value.
-    for (var item in movie) {
-      var text = item + ": " + movie[item];
+    //This removes the properties of the movie object we don't want to
+    //display
+    delete movie.Title;
+    delete movie.Poster;
+    delete movie.Type;
+    delete movie.Response;
+    //This gets every property of the movie object and displays the 
+    //property name and it's value.
+    for (var property in movie) {
+      var text = property + ": " + movie[property];
       var listItemEl = document.createElement('li');
       listItemEl.innerHTML = text;
       listEl.appendChild(listItemEl);
@@ -165,6 +171,8 @@ window.onload = function(){
 
   function addFavoriteButton(target, movie, imdbid){
     var favoriteButton = document.createElement('button');
+    favoriteButton.className = "favorite-button";
+    favoriteButton.className = "movie-buttons";
     favoriteButton.innerHTML = 'favorite';
     favoriteButton.onclick = function(){
       saveFavoriteMovie(movie, imdbid);
@@ -174,6 +182,8 @@ window.onload = function(){
 
   function addCloseButton(target){
     var closeButton = document.createElement('button');
+    closeButton.className = "close-button";
+    closeButton.className = "movie-buttons";
     closeButton.innerHTML = 'close';
     closeButton.onclick = function(){
       removeOldMovieData();
@@ -189,11 +199,15 @@ window.onload = function(){
   function removeOldMovieData(){
     //there should only ever be one oldMovies element, but since
     //getElementsByClassName returns an array, we might as well
-    //use for to make sure we remove everything in the array.
+    //make sure we remove everything in the array.
     var oldMovies = document.getElementsByClassName('movie-info');
-    for(var i = 0; i < oldMovies.length; ++ i){
-      oldMovies[i].parentNode.removeChild(oldMovies[i]);
-    };
-  };
+    while(oldMovies.length != 0 ){
+      oldMovies[0].parentNode.removeChild(oldMovies[0]);
+    }
 
+    var movieButtons = document.getElementsByClassName('movie-buttons');
+    while(movieButtons.length != 0){
+      movieButtons[0].parentNode.removeChild(movieButtons[0]);
+    }
+  };
 }
