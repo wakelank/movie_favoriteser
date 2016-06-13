@@ -17,6 +17,13 @@ window.onload = function(){
     getFavorites();
   };
 
+  /////////////////////////////////////////////////////////////////////////
+  //
+  //These functions handle the send and receiving of data between between
+  //the web page and OMDB and between the webpage and the Sinatra server.
+  //
+  ///////////////////////////////////////////////////////////////////////
+
   function sendSearchRequest(searchTerm){
     var searchUrl = baseUrl + "?s=" + searchTerm;
 
@@ -83,8 +90,14 @@ window.onload = function(){
 
     request.open('GET', url, true);
     request.send();
-
   };
+
+  /////////////////////////////////////////////////////////////////////////////
+  //
+  //These functions handle adding parsing the data and adding and removing
+  //stuff from the DOM.
+  //
+  ////////////////////////////////////////////////////////////////////////////
 
   //Goes through the movies list, builds the html code that we need
   //to add to the page, and then appends it to the movie-list ul.
@@ -119,7 +132,6 @@ window.onload = function(){
     }
   }
 
-
   function addMovie(target, movie){
     var movieDivEl = document.createElement('div');
     var movieName = movie.Title;
@@ -129,7 +141,7 @@ window.onload = function(){
     addFavoriteButton(movieDivEl, movieName, imdbid);
     var listEl = document.createElement('ul');
     //This gets every attribute (item) of the movie object and displays the 
-    //attrbute and it's value.
+    //attribute and it's value.
     for (var item in movie) {
       var text = item + ": " + movie[item];
       var textNode = document.createTextNode(text);
@@ -139,8 +151,8 @@ window.onload = function(){
     }
     movieDivEl.appendChild(listEl);
     target.appendChild(movieDivEl);
-
   }
+
   function addFavoriteButton(target, movie, imdbid){
     var favoriteButton = document.createElement('button');
     var text = document.createTextNode('favorite');
@@ -162,6 +174,9 @@ window.onload = function(){
   }
 
   function removeOldMovieData(){
+    //there should only ever be one oldMovies element, but since
+    //getElementsByClassName returns an array, we might as well
+    //use for to make sure we remove everything in the array.
     var oldMovies = document.getElementsByClassName('movie-info');
     for(var i = 0; i < oldMovies.length; ++ i){
       oldMovies[i].parentNode.removeChild(oldMovies[i]);
