@@ -7,12 +7,13 @@ get '/' do  #Forgot the 'do'
   File.read('views/index.html') #Need to include 'views'
 end
 
-# get 'favorites' do
-#   response.header['Content-Type'] = 'application/json'
-#   File.read('data.json')
-# end
+get '/favorites' do #Put the slash in before favorites.
+  response.header['Content-Type'] = 'application/json'
+  File.read('data.json')
+end
 
-post '/favorites' do 
+post '/favorites' do #Changed get to post to differentiate from the get
+                     # favorites method above
   puts 'get data'
   #The first time the data.json file is read it is empty, and the 
   #JSON parser throws a 'JSON::ParserError'. So we rescue the error, and 

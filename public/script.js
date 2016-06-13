@@ -53,13 +53,27 @@ window.onload = function(){
     var url = '/favorites?name=' + movieName + "&oid=" + oid
       request.onreadystatechange = function() {
         if (request.readyState == 4 && request.statys == 200){
-          console.log('movie added');
+          console.log(request.response);
         }
       }
 
     request.open('POST', url, true);
     request.send();
   }
+
+  function getFavorites(){
+    var request = new XMLHttpRequest();
+    var url = '/favorites'
+      request.onreadystatechange = function(){
+        if (request.readyState == 4 && request.statys == 200){
+          console.log(request.response);
+        }
+      }
+
+    request.open('GET', url, true);
+    request.send();
+
+  };
 
   function processResponse(response){
     // The response needs to be put into JSON format so we can process it.

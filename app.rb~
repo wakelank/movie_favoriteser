@@ -12,7 +12,7 @@ end
 #   File.read('data.json')
 # end
 
-get '/favorites' do 
+post '/favorites' do 
   puts 'get data'
   #The first time the data.json file is read it is empty, and the 
   #JSON parser throws a 'JSON::ParserError'. So we rescue the error, and 
