@@ -4,6 +4,7 @@ window.onload = function(){
   var baseUrl = "https://www.omdbapi.com/";
 
   document.getElementById('movieSearchFormSubmit').onclick = function(e){
+    //Prevents the page from reloading with the form submit button is clicked.
     e.preventDefault();
     // searchParam is the name of the text field in our movie search form
     // in the index.html document. This is a handy way to get form data based
@@ -13,8 +14,6 @@ window.onload = function(){
   };
 
   document.getElementById('favorites-button').onclick = function(e){
-    e.preventDefault();
-
     getFavorites();
   };
 
@@ -27,9 +26,14 @@ window.onload = function(){
       if (request.readyState == 4 && request.status == 200) {
         // JavaScript's asynchronicity in action. This line will not run until
         // the response from OMBD comes back.
-        // Then it will pass the response to the processResponse function defined below.
-
-        processResponse(request.response);
+        // Then it will pass the response to the addMovies function defined below.
+        // The response needs to be put into JSON format so we can process it.
+        var jsonData = JSON.parse(request.response);
+        //'Search' here is not a JavaScript function. It's particular to the JSON
+        //data from OMDB. Play around with the movies variable in the 
+        //console to see.
+        var movies = jsonData.Search;
+        addMovies(movies);
       }
     }
     request.open('GET', searchUrl, true);
@@ -41,8 +45,8 @@ window.onload = function(){
     var request = new XMLHttpRequest();
     request.onreadystatechange = function() {
       if (request.readyState == 4 && request.status == 200) {
-        var movieListEl = processMovieData(request.response);
-        target.appendChild(movieListEl);
+        var movie = JSON.parse(request.response);
+        addMovie(target, movie);
       }
     };
 
@@ -68,12 +72,12 @@ window.onload = function(){
   }
 
   function getFavorites(){
-    console.log('get favs');
     var request = new XMLHttpRequest();
     var url = '/favorites'
       request.onreadystatechange = function(){
         if (request.readyState == 4 && request.status == 200){
-          processFavorites(request.response);
+          var movies = JSON.parse(request.response);
+          addMovies(movies);
         }
       }
 
@@ -82,52 +86,10 @@ window.onload = function(){
 
   };
 
-  function processFavorites(response){
-    var movies = JSON.parse(response);
-    addMovies(movies);
-  }
-
-  function processResponse(response){
-    // The response needs to be put into JSON format so we can process it.
-    var jsonData = JSON.parse(response);
-    //'Search' here is not a JavaScript function. It's particular to the JSON
-    //data from OMDB. Play around with the movies variable in the 
-    //console to see.
-    var movies = jsonData.Search;
-
-    //Goes through the movies list, builds the html code that we need
-    //to add to the page, and then appends it to the movie-list ul.
-    //This is the proper order to do these things.
-    addMovies(movies)
-    // for(var i = 0; i < movies.length; ++i){
-    //   var movieTitle = movies[i].Title;
-    //   //imdbId is not arcane JavaScriptery. It's a unique identifier we can use
-    //   //to the the specific movie from OMDB.
-    //   var movieImdbId = movies[i].imdbID;
-    //   // First: build the individual elements
-    //   var titleNode = document.createTextNode(movieTitle);
-    //   var titleSpanEl = document.createElement('span');
-    //   var listItemEl = document.createElement('li');
-    //   //Use 'data-something' to store data in an HTML element.
-    //   titleSpanEl.setAttribute('data-imdbid', movieImdbId);
-    //   titleSpanEl.onclick = function(e){
-    //     //JavaScript provides this cute way to get your data back out of the 
-    //     //HTML elemement. Any attribute in an HTML element that starts with 'data-' 
-    //     //is available in the 'dataset'.
-    //     var targetImdbId = e.target.dataset.imdbid;
-    //     requestMovieData(e.target.parentElement, targetImdbId);
-    //   }
-    //   // Next: put the elements together
-    //   titleSpanEl.appendChild(titleNode);
-    //   listItemEl.appendChild(titleSpanEl);
-
-    //   // Last: add them to the page. 
-    //   movieList.appendChild(listItemEl);
-    // }
-  }
-
+  //Goes through the movies list, builds the html code that we need
+  //to add to the page, and then appends it to the movie-list ul.
+  //This is the proper order to do these things.
   function addMovies(movies){
-console.log(movies);
     var movieList = document.getElementsByClassName('movie-list')[0];
     movieList.innerHTML = "";
     for(var i = 0; i < movies.length; ++i){
@@ -157,8 +119,8 @@ console.log(movies);
     }
   }
 
-  function processMovieData(response){
-    var movie = JSON.parse(response);
+
+  function addMovie(target, movie){
     var movieDivEl = document.createElement('div');
     var movieName = movie.Title;
     var imdbid = movie.imdbID;
@@ -176,9 +138,9 @@ console.log(movies);
       listEl.appendChild(listItemEl);
     }
     movieDivEl.appendChild(listEl);
-    return movieDivEl;
-  };
+    target.appendChild(movieDivEl);
 
+  }
   function addFavoriteButton(target, movie, imdbid){
     var favoriteButton = document.createElement('button');
     var text = document.createTextNode('favorite');
