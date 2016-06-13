@@ -9,8 +9,8 @@
       <input type="text" name="searchParam">
       <input type="submit" id="movieSearchFormSubmit">
     </form>
-    <div class="searchResults">
-    </div>
+    <ul class="movie-list">
+    </ul>
   </body>
 <!-- The script.js file is located in the public folder, but you don't -->
 <!-- need to put that in the src below. Sinatra looks in the public folder -->

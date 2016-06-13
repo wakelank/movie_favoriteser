@@ -12,6 +12,12 @@ window.onload = function(){
     sendSearchRequest(searchTerm);
   };
 
+  document.getElementById('favorites-button').onclick = function(e){
+    e.preventDefault();
+
+    getFavorites();
+  };
+
   function sendSearchRequest(searchTerm){
     var searchUrl = baseUrl + "?s=" + searchTerm;
 
@@ -46,13 +52,13 @@ window.onload = function(){
 
   //This function has the same structure as sendSearchRequest(), but it sends 
   //request to our own app.rb.
-  function saveFavoriteMovie(movieName, oid){
+  function saveFavoriteMovie(movieName, imdbid){
     var request = new XMLHttpRequest();
-    //This puts the name and oid in the query string so they'll
+    //This puts the name and imdbID in the query string so they'll
     //be in the params in the route in app.rb.
-    var url = '/favorites?name=' + movieName + "&oid=" + oid
+    var url = '/favorites?title=' + movieName + "&imdbid=" + imdbid
       request.onreadystatechange = function() {
-        if (request.readyState == 4 && request.statys == 200){
+        if (request.readyState == 4 && request.status == 200){
           console.log(request.response);
         }
       }
@@ -62,11 +68,12 @@ window.onload = function(){
   }
 
   function getFavorites(){
+    console.log('get favs');
     var request = new XMLHttpRequest();
     var url = '/favorites'
       request.onreadystatechange = function(){
-        if (request.readyState == 4 && request.statys == 200){
-          console.log(request.response);
+        if (request.readyState == 4 && request.status == 200){
+          processFavorites(request.response);
         }
       }
 
@@ -75,6 +82,11 @@ window.onload = function(){
 
   };
 
+  function processFavorites(response){
+    var movies = JSON.parse(response);
+    addMovies(movies);
+  }
+
   function processResponse(response){
     // The response needs to be put into JSON format so we can process it.
     var jsonData = JSON.parse(response);
@@ -82,11 +94,42 @@ window.onload = function(){
     //data from OMDB. Play around with the movies variable in the 
     //console to see.
     var movies = jsonData.Search;
-    var movieList = document.getElementsByClassName('movie-list')[0];
 
     //Goes through the movies list, builds the html code that we need
     //to add to the page, and then appends it to the movie-list ul.
     //This is the proper order to do these things.
+    addMovies(movies)
+    // for(var i = 0; i < movies.length; ++i){
+    //   var movieTitle = movies[i].Title;
+    //   //imdbId is not arcane JavaScriptery. It's a unique identifier we can use
+    //   //to the the specific movie from OMDB.
+    //   var movieImdbId = movies[i].imdbID;
+    //   // First: build the individual elements
+    //   var titleNode = document.createTextNode(movieTitle);
+    //   var titleSpanEl = document.createElement('span');
+    //   var listItemEl = document.createElement('li');
+    //   //Use 'data-something' to store data in an HTML element.
+    //   titleSpanEl.setAttribute('data-imdbid', movieImdbId);
+    //   titleSpanEl.onclick = function(e){
+    //     //JavaScript provides this cute way to get your data back out of the 
+    //     //HTML elemement. Any attribute in an HTML element that starts with 'data-' 
+    //     //is available in the 'dataset'.
+    //     var targetImdbId = e.target.dataset.imdbid;
+    //     requestMovieData(e.target.parentElement, targetImdbId);
+    //   }
+    //   // Next: put the elements together
+    //   titleSpanEl.appendChild(titleNode);
+    //   listItemEl.appendChild(titleSpanEl);
+
+    //   // Last: add them to the page. 
+    //   movieList.appendChild(listItemEl);
+    // }
+  }
+
+  function addMovies(movies){
+console.log(movies);
+    var movieList = document.getElementsByClassName('movie-list')[0];
+    movieList.innerHTML = "";
     for(var i = 0; i < movies.length; ++i){
       var movieTitle = movies[i].Title;
       //imdbId is not arcane JavaScriptery. It's a unique identifier we can use
@@ -118,10 +161,10 @@ window.onload = function(){
     var movie = JSON.parse(response);
     var movieDivEl = document.createElement('div');
     var movieName = movie.Title;
-    var oid = movie.imdbID;
+    var imdbid = movie.imdbID;
     movieDivEl.className = 'movie-info';
     addCloseButton(movieDivEl);
-    addFavoriteButton(movieDivEl, movieName, oid);
+    addFavoriteButton(movieDivEl, movieName, imdbid);
     var listEl = document.createElement('ul');
     //This gets every attribute (item) of the movie object and displays the 
     //attrbute and it's value.
@@ -136,12 +179,12 @@ window.onload = function(){
     return movieDivEl;
   };
 
-  function addFavoriteButton(target, movie, oid){
+  function addFavoriteButton(target, movie, imdbid){
     var favoriteButton = document.createElement('button');
     var text = document.createTextNode('favorite');
     favoriteButton.appendChild(text);
     favoriteButton.onclick = function(){
-      saveFavoriteMovie(movie, oid);
+      saveFavoriteMovie(movie, imdbid);
     };
     target.appendChild(favoriteButton);
   }

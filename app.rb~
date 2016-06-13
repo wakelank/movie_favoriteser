@@ -1,3 +1,4 @@
+require 'pry'
 require 'json' #Need this to be able to use JSON below
 #getting gems from Gemfile instead of app.rb.
 require 'bundler'
@@ -7,13 +8,14 @@ get '/' do  #Forgot the 'do'
   File.read('views/index.html') #Need to include 'views'
 end
 
-# get 'favorites' do
-#   response.header['Content-Type'] = 'application/json'
-#   File.read('data.json')
-# end
+get '/favorites' do #Put the slash in before favorites.
+  puts 'favs'
+  response.headers['Content-Type'] = 'application/json' #headers, not header
+  File.read('data.json')
+end
 
-post '/favorites' do 
-  puts 'get data'
+post '/favorites' do #Changed get to post to differentiate from the get
+                     # favorites method above
   #The first time the data.json file is read it is empty, and the 
   #JSON parser throws a 'JSON::ParserError'. So we rescue the error, and 
   #make our own file array to put the movie data in.
@@ -23,10 +25,10 @@ post '/favorites' do
     puts "there was a parser error, but I think we're ok"
     file = []
   end
-  unless params[:name] && params[:oid]
+  unless params[:title] && params[:imdbid]
     return 'Invalid Request'
   end #Don't forget to close that unless loop
-  movie = { name: params[:name], oid: params[:oid] }
+  movie = { title: params[:Title], imdbid: params[:imdbID] }
   file << movie
   File.write('data.json',JSON.pretty_generate(file))
   movie.to_json
