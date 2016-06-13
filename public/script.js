@@ -70,7 +70,7 @@ window.onload = function(){
         //HTML elemement. Anything attribute that starts with 'data-' 
         //is available in the 'dataset'.
         var targetImdbId = e.target.dataset.imdbid;
-        requestMovieData(e.target, targetImdbId);
+        requestMovieData(e.target.parentElement, targetImdbId);
       }
       // Next: put the elements together
       titleSpanEl.appendChild(titleNode);
@@ -83,6 +83,7 @@ window.onload = function(){
   }
 
   function requestMovieData(target, imdbId){
+    console.log('request');
     var movieUrl = baseUrl + "?i=" + imdbId;
     var request = new XMLHttpRequest();
     request.onreadystatechange = function() {
@@ -121,7 +122,9 @@ window.onload = function(){
     var favoriteButton = document.createElement('button');
     var text = document.createTextNode('favorite');
     favoriteButton.appendChild(text);
-    favoriteButton.onclick = postFavoriteMovie(movie, oid);
+    favoriteButton.onclick = function(){
+      postFavoriteMovie(movie, oid);
+    };
     target.appendChild(favoriteButton);
   }
 
