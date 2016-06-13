@@ -76,7 +76,7 @@ window.onload = function(){
 
     request.open('POST', url, true);
     request.send();
-  }
+  };
 
   function getFavorites(){
     var request = new XMLHttpRequest();
@@ -103,6 +103,12 @@ window.onload = function(){
   //to add to the page, and then appends it to the movie-list ul.
   //This is the proper order to do these things.
   function addMovies(movies){
+    if (movies == undefined){
+      addMessage('no movies found');
+      return;
+    }else{
+      addMessage('');
+    }
     var movieList = document.getElementsByClassName('movie-list')[0];
     movieList.innerHTML = "";
     for(var i = 0; i < movies.length; ++i){
@@ -130,7 +136,7 @@ window.onload = function(){
       // Last: add them to the page. 
       movieList.appendChild(listItemEl);
     }
-  }
+  };
 
   function addMovie(target, movie){
     var movieDivEl = document.createElement('div');
@@ -151,7 +157,7 @@ window.onload = function(){
     }
     movieDivEl.appendChild(listEl);
     target.appendChild(movieDivEl);
-  }
+  };
 
   function addFavoriteButton(target, movie, imdbid){
     var favoriteButton = document.createElement('button');
@@ -161,7 +167,7 @@ window.onload = function(){
       saveFavoriteMovie(movie, imdbid);
     };
     target.appendChild(favoriteButton);
-  }
+  };
 
   function addCloseButton(target){
     var closeButton = document.createElement('button');
@@ -171,7 +177,12 @@ window.onload = function(){
       removeOldMovieData();
     };
     target.appendChild(closeButton);
-  }
+  };
+
+  function addMessage(message){
+    var messageDiv = document.getElementsByClassName('message-area')[0];
+    messageDiv.innerHTML = message;
+  };
 
   function removeOldMovieData(){
     //there should only ever be one oldMovies element, but since
@@ -181,6 +192,6 @@ window.onload = function(){
     for(var i = 0; i < oldMovies.length; ++ i){
       oldMovies[i].parentNode.removeChild(oldMovies[i]);
     };
-  }
+  };
 
 }

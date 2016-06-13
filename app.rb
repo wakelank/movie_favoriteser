@@ -8,7 +8,6 @@ get '/' do  #Forgot the 'do'
 end
 
 get '/favorites' do #Put the slash in before favorites.
-  puts 'favs'
   response.headers['Content-Type'] = 'application/json' #headers, not header
   File.read('data.json')
 end
