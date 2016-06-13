@@ -73,9 +73,6 @@ window.onload = function(){
         var movieListEl = processMovieData(request.response);
         removeOldMovieData();
         target.appendChild(movieListEl);
-
-
-
       }
     };
 
@@ -85,8 +82,10 @@ window.onload = function(){
 
   function processMovieData(data){
     var movie = JSON.parse(data);
+    var movieDivEl = document.createElement('div');
+    movieDivEl.className = 'movie-info';
+    addCloseButton(movieDivEl);
     var listEl = document.createElement('ul');
-    listEl.className = 'movie-info';
    for (var item in movie) {
      var text = item + ": " + movie[item];
      var textNode = document.createTextNode(text);
@@ -94,10 +93,17 @@ window.onload = function(){
      listItemEl.appendChild(textNode);
      listEl.appendChild(listItemEl);
    }
-   return listEl;
-
-
+   movieDivEl.appendChild(listEl);
+   return movieDivEl;
   };
+
+  function addCloseButton(target){
+    var closeButton = document.createElement('button');
+    var text = document.createTextNode('close');
+    closeButton.appendChild(text);
+    closeButton.onclick = removeOldMovieData();
+    target.appendChild(closeButton);
+  }
 
   function removeOldMovieData(){
     var oldMovies = document.getElementsByClassName('movie-info');
