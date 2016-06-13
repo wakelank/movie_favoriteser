@@ -1,13 +1,19 @@
 
 window.onload = function(){
-  
+
   var baseUrl = "https://www.omdbapi.com/";
 
   document.getElementById('movieSearchFormSubmit').onclick = function(e){
     e.preventDefault();
+    // searchParam is the name of the text field in our movie search form
+    // in the index.html document. This is a handy way to get form data based
+    // on the name of the field.
+    var searchTerm = document.getElementById('movieSearchForm').searchParam.value;
+    sendSearchRequest(searchTerm);
+  };
 
-    var searchValue = document.getElementById('movieSearchForm').searchParam.value;
-    var searchUrl = baseUrl + "?s=" + searchValue;
+  function sendSearchRequest(searchTerm){
+    var searchUrl = baseUrl + "?s=" + searchTerm;
 
     // Builds the request object
     var request = new XMLHttpRequest();
@@ -19,27 +25,41 @@ window.onload = function(){
 
         processResponse(request.response);
       }
-    };
-
+    }
     request.open('GET', searchUrl, true);
     request.send();
   };
 
-  function postFavoriteMovie(movieName, oid){
+  function requestMovieData(target, imdbId){
+    var movieUrl = baseUrl + "?i=" + imdbId;
     var request = new XMLHttpRequest();
-    var url = '/favorites?name=' + movieName + "&oid=" + oid
     request.onreadystatechange = function() {
-      if (request.readyState == 4 && request.statys == 200){
-        console.log('movie added');
+      if (request.readyState == 4 && request.status == 200) {
+        var movieListEl = processMovieData(request.response);
+        target.appendChild(movieListEl);
       }
-    }
+    };
 
-    request.open('GET', url, true);
-    // request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    request.open('GET', movieUrl, true);
+    request.send();
+  };
+
+  //This function has the same structure as sendSearchRequest(), but it sends 
+  //request to our own app.rb.
+  function saveFavoriteMovie(movieName, oid){
+    var request = new XMLHttpRequest();
+    //This puts the name and oid in the query string so they'll
+    //be in the params in the route in app.rb.
+    var url = '/favorites?name=' + movieName + "&oid=" + oid
+      request.onreadystatechange = function() {
+        if (request.readyState == 4 && request.statys == 200){
+          console.log('movie added');
+        }
+      }
+
+    request.open('POST', url, true);
     request.send();
   }
-
-  
 
   function processResponse(response){
     // The response needs to be put into JSON format so we can process it.
@@ -60,14 +80,13 @@ window.onload = function(){
       var movieImdbId = movies[i].imdbID;
       // First: build the individual elements
       var titleNode = document.createTextNode(movieTitle);
-      var listItemEl = document.createElement('li');
       var titleSpanEl = document.createElement('span');
+      var listItemEl = document.createElement('li');
       //Use 'data-something' to store data in an HTML element.
       titleSpanEl.setAttribute('data-imdbid', movieImdbId);
       titleSpanEl.onclick = function(e){
-        e.preventDefault();
         //JavaScript provides this cute way to get your data back out of the 
-        //HTML elemement. Anything attribute that starts with 'data-' 
+        //HTML elemement. Any attribute in an HTML element that starts with 'data-' 
         //is available in the 'dataset'.
         var targetImdbId = e.target.dataset.imdbid;
         requestMovieData(e.target.parentElement, targetImdbId);
@@ -75,31 +94,14 @@ window.onload = function(){
       // Next: put the elements together
       titleSpanEl.appendChild(titleNode);
       listItemEl.appendChild(titleSpanEl);
-        
 
       // Last: add them to the page. 
       movieList.appendChild(listItemEl);
     }
   }
 
-  function requestMovieData(target, imdbId){
-    console.log('request');
-    var movieUrl = baseUrl + "?i=" + imdbId;
-    var request = new XMLHttpRequest();
-    request.onreadystatechange = function() {
-      if (request.readyState == 4 && request.status == 200) {
-        var movieListEl = processMovieData(request.response);
-        // removeOldMovieData();
-        target.appendChild(movieListEl);
-      }
-    };
-
-    request.open('GET', movieUrl, true);
-    request.send();
-  };
-
-  function processMovieData(data){
-    var movie = JSON.parse(data);
+  function processMovieData(response){
+    var movie = JSON.parse(response);
     var movieDivEl = document.createElement('div');
     var movieName = movie.Title;
     var oid = movie.imdbID;
@@ -107,15 +109,17 @@ window.onload = function(){
     addCloseButton(movieDivEl);
     addFavoriteButton(movieDivEl, movieName, oid);
     var listEl = document.createElement('ul');
-   for (var item in movie) {
-     var text = item + ": " + movie[item];
-     var textNode = document.createTextNode(text);
-     var listItemEl = document.createElement('li');
-     listItemEl.appendChild(textNode);
-     listEl.appendChild(listItemEl);
-   }
-   movieDivEl.appendChild(listEl);
-   return movieDivEl;
+    //This gets every attribute (item) of the movie object and displays the 
+    //attrbute and it's value.
+    for (var item in movie) {
+      var text = item + ": " + movie[item];
+      var textNode = document.createTextNode(text);
+      var listItemEl = document.createElement('li');
+      listItemEl.appendChild(textNode);
+      listEl.appendChild(listItemEl);
+    }
+    movieDivEl.appendChild(listEl);
+    return movieDivEl;
   };
 
   function addFavoriteButton(target, movie, oid){
@@ -123,7 +127,7 @@ window.onload = function(){
     var text = document.createTextNode('favorite');
     favoriteButton.appendChild(text);
     favoriteButton.onclick = function(){
-      postFavoriteMovie(movie, oid);
+      saveFavoriteMovie(movie, oid);
     };
     target.appendChild(favoriteButton);
   }

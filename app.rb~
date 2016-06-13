@@ -1,5 +1,5 @@
-# require 'sinatra'
-require 'json'
+require 'json' #Need this to be able to use JSON below
+#getting gems from Gemfile instead of app.rb.
 require 'bundler'
 Bundler.require
 
@@ -14,7 +14,9 @@ end
 
 get '/favorites' do 
   puts 'get data'
-  puts params
+  #The first time the data.json file is read it is empty, and the 
+  #JSON parser throws a 'JSON::ParserError'. So we rescue the error, and 
+  #make our own file array to put the movie data in.
   begin
     file = JSON.parse(File.read('data.json'))
   rescue JSON::ParserError
