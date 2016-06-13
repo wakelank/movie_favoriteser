@@ -98,8 +98,8 @@ window.onload = function(){
 
   /////////////////////////////////////////////////////////////////////////////
   //
-  //These functions handle adding parsing the data and adding and removing
-  //stuff from the DOM.
+  //These functions handle parsing the data and adding and removing
+  //elements from the DOM.
   //
   ////////////////////////////////////////////////////////////////////////////
 
@@ -121,12 +121,12 @@ window.onload = function(){
       //to the the specific movie from OMDB.
       var movieImdbId = movies[i].imdbID;
       // First: build the individual elements
-      var titleNode = document.createTextNode(movieTitle);
-      var titleSpanEl = document.createElement('span');
+      var titleDivEl = document.createElement('div');
+      titleDivEl.className = "title-bar";
       var listItemEl = document.createElement('li');
       //Use 'data-something' to store data in an HTML element.
-      titleSpanEl.setAttribute('data-imdbid', movieImdbId);
-      titleSpanEl.onclick = function(e){
+      titleDivEl.setAttribute('data-imdbid', movieImdbId);
+      titleDivEl.onclick = function(e){
         //JavaScript provides this cute way to get your data back out of the 
         //HTML elemement. Any attribute in an HTML element that starts with 'data-' 
         //is available in the 'dataset'.
@@ -134,8 +134,8 @@ window.onload = function(){
         requestMovieData(e.target.parentElement, targetImdbId);
       }
       // Next: put the elements together
-      titleSpanEl.appendChild(titleNode);
-      listItemEl.appendChild(titleSpanEl);
+      titleDivEl.innerHTML = movieTitle;
+      listItemEl.appendChild(titleDivEl);
 
       // Last: add them to the page. 
       movieList.appendChild(listItemEl);
@@ -147,16 +147,16 @@ window.onload = function(){
     var movieName = movie.Title;
     var imdbid = movie.imdbID;
     movieDivEl.className = 'movie-info';
-    addCloseButton(movieDivEl);
-    addFavoriteButton(movieDivEl, movieName, imdbid);
+    var titleBar = target.getElementsByClassName('title-bar')[0];
+    addCloseButton(titleBar);
+    addFavoriteButton(titleBar, movieName, imdbid);
     var listEl = document.createElement('ul');
     //This gets every attribute (item) of the movie object and displays the 
     //attribute and it's value.
     for (var item in movie) {
       var text = item + ": " + movie[item];
-      var textNode = document.createTextNode(text);
       var listItemEl = document.createElement('li');
-      listItemEl.appendChild(textNode);
+      listItemEl.innerHTML = text;
       listEl.appendChild(listItemEl);
     }
     movieDivEl.appendChild(listEl);
@@ -165,8 +165,7 @@ window.onload = function(){
 
   function addFavoriteButton(target, movie, imdbid){
     var favoriteButton = document.createElement('button');
-    var text = document.createTextNode('favorite');
-    favoriteButton.appendChild(text);
+    favoriteButton.innerHTML = 'favorite';
     favoriteButton.onclick = function(){
       saveFavoriteMovie(movie, imdbid);
     };
@@ -175,8 +174,7 @@ window.onload = function(){
 
   function addCloseButton(target){
     var closeButton = document.createElement('button');
-    var text = document.createTextNode('close');
-    closeButton.appendChild(text);
+    closeButton.innerHTML = 'close';
     closeButton.onclick = function(){
       removeOldMovieData();
     };
