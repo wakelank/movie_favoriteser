@@ -83,7 +83,11 @@ window.onload = function(){
     var url = '/favorites'
       request.onreadystatechange = function(){
         if (request.readyState == 4 && request.status == 200){
-          var movies = JSON.parse(request.response);
+          var response = request.response
+          if (response == ""){
+            response = "{}"
+          }
+          var movies = JSON.parse(response);
           addMovies(movies);
         }
       }

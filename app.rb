@@ -9,7 +9,7 @@ end
 
 get '/favorites' do #Put the slash in before favorites.
   response.headers['Content-Type'] = 'application/json' #headers, not header
-  File.read('data.json')
+  data = File.read('data.json')
 end
 
 post '/favorites' do #Changed get to post to differentiate from the get

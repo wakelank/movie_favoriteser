@@ -8,9 +8,15 @@ get '/' do  #Forgot the 'do'
 end
 
 get '/favorites' do #Put the slash in before favorites.
-  puts 'favs'
   response.headers['Content-Type'] = 'application/json' #headers, not header
-  File.read('data.json')
+  data = File.read('data.json')
+  #This creates an empty JSON string for the javascript to parse in case 
+  #the data file is empty.
+  if data == ""
+    "{}"
+  else
+    data
+  end
 end
 
 post '/favorites' do #Changed get to post to differentiate from the get
