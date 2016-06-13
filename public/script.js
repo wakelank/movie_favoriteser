@@ -85,6 +85,7 @@ window.onload = function(){
     var movieDivEl = document.createElement('div');
     movieDivEl.className = 'movie-info';
     addCloseButton(movieDivEl);
+    addFavoriteButton(movieDivEl);
     var listEl = document.createElement('ul');
    for (var item in movie) {
      var text = item + ": " + movie[item];
@@ -96,6 +97,15 @@ window.onload = function(){
    movieDivEl.appendChild(listEl);
    return movieDivEl;
   };
+
+  function addFavoriteButton(target){
+    var favoriteButton = document.createElement('button');
+    var text = document.createTextNode('favorite');
+    var movie = 'myMovie'
+    favoriteButton.appendChild(text);
+    favoriteButton.onclick = addToFavorites(movie);
+    target.appendChild(favoriteButton);
+  }
 
   function addCloseButton(target){
     var closeButton = document.createElement('button');
@@ -110,5 +120,9 @@ window.onload = function(){
     for(var i = 0; i < oldMovies.length; ++ i){
       oldMovies[i].parentNode.removeChild(oldMovies[i]);
     };
+  }
+
+  function addToFavorites(movie){
+    console.log(movie);
   }
 }
