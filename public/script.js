@@ -129,7 +129,9 @@ window.onload = function(){
     var closeButton = document.createElement('button');
     var text = document.createTextNode('close');
     closeButton.appendChild(text);
-    closeButton.onclick = removeOldMovieData();
+    closeButton.onclick = function(){
+      removeOldMovieData();
+    };
     target.appendChild(closeButton);
   }
 
