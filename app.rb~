@@ -19,6 +19,7 @@ get '/favorites' do
     file = JSON.parse(File.read('data.json'))
   rescue JSON::ParserError
     puts "there was a parser error, but I think we're ok"
+    file = []
   end
   unless params[:name] && params[:oid]
     return 'Invalid Request'

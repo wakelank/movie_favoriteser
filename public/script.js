@@ -27,14 +27,14 @@ window.onload = function(){
 
   function postFavoriteMovie(movieName, oid){
     var request = new XMLHttpRequest();
+    var url = '/favorites?name=' + movieName + "&oid=" + oid
     request.onreadystatechange = function() {
       if (request.readyState == 4 && request.statys == 200){
         console.log('movie added');
       }
     }
 
-    var data = { name: "mymovie", oid: 101 };
-    request.open('GET', '/favorites?name=myMovie&oid=01010', true);
+    request.open('GET', url, true);
     // request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     request.send();
   }
@@ -98,9 +98,11 @@ window.onload = function(){
   function processMovieData(data){
     var movie = JSON.parse(data);
     var movieDivEl = document.createElement('div');
+    var movieName = movie.Title;
+    var oid = movie.imdbID;
     movieDivEl.className = 'movie-info';
     addCloseButton(movieDivEl);
-    addFavoriteButton(movieDivEl);
+    addFavoriteButton(movieDivEl, movieName, oid);
     var listEl = document.createElement('ul');
    for (var item in movie) {
      var text = item + ": " + movie[item];
@@ -113,12 +115,11 @@ window.onload = function(){
    return movieDivEl;
   };
 
-  function addFavoriteButton(target){
+  function addFavoriteButton(target, movie, oid){
     var favoriteButton = document.createElement('button');
     var text = document.createTextNode('favorite');
-    var movie = 'myMovie'
     favoriteButton.appendChild(text);
-    favoriteButton.onclick = postFavoriteMovie(movie);
+    favoriteButton.onclick = postFavoriteMovie(movie, oid);
     target.appendChild(favoriteButton);
   }
 
