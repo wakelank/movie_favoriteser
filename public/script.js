@@ -61,9 +61,10 @@ window.onload = function(){
       // First: build the individual elements
       var titleNode = document.createTextNode(movieTitle);
       var listItemEl = document.createElement('li');
+      var titleSpanEl = document.createElement('span');
       //Use 'data-something' to store data in an HTML element.
-      listItemEl.setAttribute('data-imdbid', movieImdbId);
-      listItemEl.onclick = function(e){
+      titleSpanEl.setAttribute('data-imdbid', movieImdbId);
+      titleSpanEl.onclick = function(e){
         e.preventDefault();
         //JavaScript provides this cute way to get your data back out of the 
         //HTML elemement. Anything attribute that starts with 'data-' 
@@ -72,7 +73,8 @@ window.onload = function(){
         requestMovieData(e.target, targetImdbId);
       }
       // Next: put the elements together
-      listItemEl.appendChild(titleNode);
+      titleSpanEl.appendChild(titleNode);
+      listItemEl.appendChild(titleSpanEl);
         
 
       // Last: add them to the page. 
@@ -86,7 +88,7 @@ window.onload = function(){
     request.onreadystatechange = function() {
       if (request.readyState == 4 && request.status == 200) {
         var movieListEl = processMovieData(request.response);
-        removeOldMovieData();
+        // removeOldMovieData();
         target.appendChild(movieListEl);
       }
     };
