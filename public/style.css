@@ -1,0 +1,29 @@
+.container{
+  width: 70%;
+  margin: 0 auto;
+  background: white;
+  padding: 10px;
+  color: dimgray;
+  font-family: arial;
+
+}
+body{
+  margin: 0;
+  background: lightblue;
+
+}
+
+html, body, .container{
+  height: 100%;
+}
+
+.movie-list{
+  list-style: none;
+}
+.movie-list li{
+  border: thin black solid;
+  margin: 10px;
+  padding: 5px;
+  width: 70%;
+
+}
