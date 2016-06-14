@@ -89,7 +89,7 @@ window.onload = function(){
           if (response == ""){
             response = "{}"
           }
-          var movies = JSON.parse(response);
+          movies = JSON.parse(response);
           addMovies(movies, true);
         }
       }
