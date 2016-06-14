@@ -1,6 +1,8 @@
 
 window.onload = function(){
 
+  // Defining these variables out here makes them available to all functions.
+  // But it has the potential of causing problems, so don't do it that often.
   var baseUrl = "https://www.omdbapi.com/";
   var movies;
 
@@ -222,5 +224,4 @@ window.onload = function(){
       messages[0].parentNode.removeChild(messages[0]);
     }
   }
-
 }
