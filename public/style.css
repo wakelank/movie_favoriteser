@@ -27,6 +27,9 @@ html, body, .container{
   margin: 10px;
   width: 70%;
 }
+.favorites .favorite-button{
+  display: none;
+}
 .title-bar{
   border-bottom: thin black solid;
   padding: 5px;

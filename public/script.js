@@ -90,7 +90,7 @@ window.onload = function(){
             response = "{}"
           }
           var movies = JSON.parse(response);
-          addMovies(movies);
+          addMovies(movies, true);
         }
       }
 
@@ -108,7 +108,7 @@ window.onload = function(){
   //Goes through the movies list, builds the html code that we need
   //to add to the page, and then appends it to the movie-list ul.
   //This is the proper order to do these things.
-  function addMovies(movies){
+  function addMovies(movies, favorites){
     if (movies == undefined){
       addMessage('no movies found');
       return;
@@ -116,6 +116,13 @@ window.onload = function(){
       clearMessages();
     }
     var movieList = document.getElementsByClassName('movie-list')[0];
+    //we need to set this class so the CSS knows to hide the favorite
+    //buttons if we're already looking at our favorites
+    if(favorites == true){
+      movieList.className = movieList.className + " favorites";
+    }else{
+      movieList.className = "movie-list";
+    }
     movieList.innerHTML = "";
     for(var i = 0; i < movies.length; ++i){
       var movieTitle = movies[i].Title;
@@ -181,8 +188,7 @@ window.onload = function(){
 
   function addFavoriteButton(target, movie, imdbid){
     var favoriteButton = document.createElement('button');
-    favoriteButton.className = "favorite-button";
-    favoriteButton.className = "movie-buttons";
+    favoriteButton.className = "movie-buttons favorite-button";
     favoriteButton.innerHTML = 'favorite';
     favoriteButton.onclick = function(){
       saveFavoriteMovie(movie, imdbid);
@@ -192,8 +198,7 @@ window.onload = function(){
 
   function addCloseButton(target){
     var closeButton = document.createElement('button');
-    closeButton.className = "close-button";
-    closeButton.className = "movie-buttons";
+    closeButton.className = "movie-buttons close-button";
     closeButton.innerHTML = 'close';
     closeButton.onclick = function(){
       //the close button really just runs addMovies again to rebuild the 
