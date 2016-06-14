@@ -2,6 +2,7 @@
 window.onload = function(){
 
   var baseUrl = "https://www.omdbapi.com/";
+  var movies;
 
   document.getElementById('movieSearchFormSubmit').onclick = function(e){
     //Prevents the page from reloading with the form submit button is clicked.
@@ -39,7 +40,7 @@ window.onload = function(){
         //'Search' here is not a JavaScript function. It's particular to the JSON
         //data from OMDB. Play around with the movies variable in the 
         //console to see.
-        var movies = jsonData.Search;
+        movies = jsonData.Search;
         addMovies(movies);
       }
     }
@@ -53,7 +54,7 @@ window.onload = function(){
     request.onreadystatechange = function() {
       if (request.readyState == 4 && request.status == 200) {
         var movie = JSON.parse(request.response);
-        addMovie(target, movie);
+        addMovie(target.parentElement, movie);
       }
     };
 
@@ -70,7 +71,8 @@ window.onload = function(){
     var url = '/favorites?title=' + movieName + "&imdbid=" + imdbid
       request.onreadystatechange = function() {
         if (request.readyState == 4 && request.status == 200){
-          console.log(request.response);
+            var movieName = JSON.parse(request.response).Title;
+          addMessage(movieName + " has been saved in your favorites.");
         }
       }
 
@@ -111,7 +113,7 @@ window.onload = function(){
       addMessage('no movies found');
       return;
     }else{
-      addMessage('');
+      clearMessages();
     }
     var movieList = document.getElementsByClassName('movie-list')[0];
     movieList.innerHTML = "";
@@ -122,11 +124,13 @@ window.onload = function(){
       var movieImdbId = movies[i].imdbID;
       // First: build the individual elements
       var titleDivEl = document.createElement('div');
+      var titleSpan = document.createElement('span');
       titleDivEl.className = "title-bar";
+      titleSpan.innerHTML = movieTitle;
       var listItemEl = document.createElement('li');
       //Use 'data-something' to store data in an HTML element.
-      titleDivEl.setAttribute('data-imdbid', movieImdbId);
-      titleDivEl.onclick = function(e){
+      titleSpan.setAttribute('data-imdbid', movieImdbId);
+      titleSpan.onclick = function(e){
         //JavaScript provides this cute way to get your data back out of the 
         //HTML elemement. Any attribute in an HTML element that starts with 'data-' 
         //is available in the 'dataset'.
@@ -134,7 +138,7 @@ window.onload = function(){
         requestMovieData(e.target.parentElement, targetImdbId);
       }
       // Next: put the elements together
-      titleDivEl.innerHTML = movieTitle;
+      titleDivEl.appendChild(titleSpan);
       listItemEl.appendChild(titleDivEl);
 
       // Last: add them to the page. 
@@ -143,13 +147,19 @@ window.onload = function(){
   };
 
   function addMovie(target, movie){
+    clearMessages();
+    var titleSpan = target.getElementsByTagName('span')[0];
+    //this turns off the onclick on the movie title so it doesn't mess 
+    //with the buttons.
+    titleSpan.setAttribute('onclick', null);
+
     var movieDivEl = document.createElement('div');
     var movieName = movie.Title;
     var imdbid = movie.imdbID;
     movieDivEl.className = 'movie-info';
-    var titleBar = target.getElementsByClassName('title-bar')[0];
-    addCloseButton(titleBar);
-    addFavoriteButton(titleBar, movieName, imdbid);
+    var titleDivEl = target.getElementsByClassName('title-bar')[0];
+    addCloseButton(titleDivEl);
+    addFavoriteButton(titleDivEl, movieName, imdbid);
     var listEl = document.createElement('ul');
     //This removes the properties of the movie object we don't want to
     //display
@@ -186,28 +196,26 @@ window.onload = function(){
     closeButton.className = "movie-buttons";
     closeButton.innerHTML = 'close';
     closeButton.onclick = function(){
-      removeOldMovieData();
+      //the close button really just runs addMovies again to rebuild the 
+      //movie list.
+      addMovies(movies);
     };
     target.appendChild(closeButton);
   };
 
   function addMessage(message){
     var messageDiv = document.getElementsByClassName('message-area')[0];
-    messageDiv.innerHTML = message;
+    var innerMessageDiv = document.createElement('div');
+    innerMessageDiv.innerHTML = message;
+    innerMessageDiv.className = 'inner-message-div';
+    messageDiv.appendChild(innerMessageDiv);
   };
 
-  function removeOldMovieData(){
-    //there should only ever be one oldMovies element, but since
-    //getElementsByClassName returns an array, we might as well
-    //make sure we remove everything in the array.
-    var oldMovies = document.getElementsByClassName('movie-info');
-    while(oldMovies.length != 0 ){
-      oldMovies[0].parentNode.removeChild(oldMovies[0]);
+  function clearMessages(){
+    var messages = document.getElementsByClassName('inner-message-div');
+    while(messages.length != 0){
+      messages[0].parentNode.removeChild(messages[0]);
     }
+  }
 
-    var movieButtons = document.getElementsByClassName('movie-buttons');
-    while(movieButtons.length != 0){
-      movieButtons[0].parentNode.removeChild(movieButtons[0]);
-    }
-  };
 }

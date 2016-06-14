@@ -37,3 +37,9 @@ html, body, .container{
 .movie-info li{
   border: none;
 }
+
+.inner-message-div{
+  border: thin black solid;
+  padding: 5px;
+  margin: 10px;
+}
